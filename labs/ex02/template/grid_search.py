@@ -26,63 +26,25 @@ def get_best_parameters(w0, w1, losses):
 # TODO: Paste your implementation of grid_search
 #       here when it is done.
 # ***************************************************
-def compute_gradient(y, tx, w):
-    """Computes the gradient at w.
+def grid_search(y, tx, grid_w0, grid_w1):
+    """Algorithm for grid search.
 
     Args:
         y: numpy array of shape=(N, )
         tx: numpy array of shape=(N,2)
-        w: numpy array of shape=(2, ). The vector of model parameters.
+        grid_w0: numpy array of shape=(num_grid_pts_w0, ). A 1D array containing num_grid_pts_w0 values of parameter w0 to be tested in the grid search.
+        grid_w1: numpy array of shape=(num_grid_pts_w1, ). A 1D array containing num_grid_pts_w1 values of parameter w1 to be tested in the grid search.
 
     Returns:
-        An numpy array of shape (2, ) (same shape as w), containing the gradient of the loss at w.
+        losses: numpy array of shape=(num_grid_pts_w0, num_grid_pts_w1). A 2D array containing the loss value for each combination of w0 and w1
     """
+
+    losses = np.zeros((len(grid_w0), len(grid_w1)))
     # ***************************************************
     # INSERT YOUR CODE HERE
-    # TODO: compute gradient vector
+    # TODO: compute loss for each combination of w0 and w1.
     # ***************************************************
-    e = y - np.dot(tx, w)
-    N = len(y)
-    gradient = -1/N * np.dot(tx.T, e)
-    return gradient
-
-def gradient_descent(y, tx, initial_w, max_iters, gamma):
-    """The Gradient Descent (GD) algorithm.
-
-    Args:
-        y: numpy array of shape=(N, )
-        tx: numpy array of shape=(N,2)
-        initial_w: numpy array of shape=(2, ). The initial guess (or the initialization) for the model parameters
-        max_iters: a scalar denoting the total number of iterations of GD
-        gamma: a scalar denoting the stepsize
-
-    Returns:
-        losses: a list of length max_iters containing the loss value (scalar) for each iteration of GD
-        ws: a list of length max_iters containing the model parameters as numpy arrays of shape (2, ), for each iteration of GD
-    """
-    # Define parameters to store w and loss
-    ws = [initial_w]
-    losses = []
-    w = initial_w
-    for n_iter in range(max_iters):
-        # ***************************************************
-        # INSERT YOUR CODE HERE
-        # TODO: compute gradient and loss
-        # ***************************************************
-        loss=compute_loss(y,tx,w)
-        gradient=compute_gradient(y,tx,w)
-        # ***************************************************
-        # INSERT YOUR CODE HERE
-        # TODO: update w by gradient
-        # ***************************************************
-        w = w - gamma * gradient
-        # store w and loss
-        ws.append(w)
-        losses.append(loss)
-        print(
-            "GD iter. {bi}/{ti}: loss={l}, w0={w0}, w1={w1}".format(
-                bi=n_iter, ti=max_iters - 1, l=loss, w0=w[0], w1=w[1]
-            )
-        )
-
-    return losses, ws
+    for i, w0 in enumerate(grid_w0):
+        for j, w1 in enumerate(grid_w1):
+            losses[i, j] = compute_loss(y, tx, np.array([w0, w1]))
+    return losses
