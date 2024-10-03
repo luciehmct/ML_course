@@ -4,7 +4,6 @@
 Gradient Descent
 """
 
-
 def compute_gradient(y, tx, w):
     """Computes the gradient at w.
 
@@ -20,7 +19,10 @@ def compute_gradient(y, tx, w):
     # INSERT YOUR CODE HERE
     # TODO: compute gradient vector
     # ***************************************************
-    raise NotImplementedError
+    e = y - np.dot(tx, w)
+    N = len(y)
+    gradient = -1/N * np.dot(tx.T, e)
+    return gradient
 
 
 def gradient_descent(y, tx, initial_w, max_iters, gamma):
@@ -46,12 +48,13 @@ def gradient_descent(y, tx, initial_w, max_iters, gamma):
         # INSERT YOUR CODE HERE
         # TODO: compute gradient and loss
         # ***************************************************
-        raise NotImplementedError
+        loss=compute_loss(y,tx,w)
+        gradient=compute_gradient(y,tx,w)
         # ***************************************************
         # INSERT YOUR CODE HERE
         # TODO: update w by gradient
         # ***************************************************
-        raise NotImplementedError
+        w = w - gamma * gradient
 
         # store w and loss
         ws.append(w)

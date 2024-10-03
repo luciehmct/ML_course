@@ -23,7 +23,10 @@ def compute_stoch_gradient(y, tx, w):
     # INSERT YOUR CODE HERE
     # TODO: implement stochastic gradient computation. It's the same as the usual gradient.
     # ***************************************************
-    raise NotImplementedError
+    e = y - np.dot(tx, w)  # Erreur pour le batch
+    N = len(y)  # Taille du batch
+    gradient = -1 / N * np.dot(tx.T, e)  # Calcul du gradient pour le batch
+    return gradient
 
 
 def stochastic_gradient_descent(y, tx, initial_w, batch_size, max_iters, gamma):
@@ -52,7 +55,19 @@ def stochastic_gradient_descent(y, tx, initial_w, batch_size, max_iters, gamma):
         # INSERT YOUR CODE HERE
         # TODO: implement stochastic gradient descent.
         # ***************************************************
-        raise NotImplementedError
+        for minibatch_y, minibatch_tx in batch_iter(y, tx, batch_size):
+            # Calculer le gradient stochastique pour ce mini-batch
+            gradient = compute_stoch_gradient(minibatch_y, minibatch_tx, w)
+
+            # Mettre à jour les poids avec le gradient stochastique
+            w = w - gamma * gradient
+
+            # Calculer la perte pour ce mini-batch
+            loss = compute_loss(minibatch_y, minibatch_tx, w)
+            
+            # Stocker les poids et les pertes
+        ws.append(w.copy())
+        losses.append(loss)
 
         print(
             "SGD iter. {bi}/{ti}: loss={l}, w0={w0}, w1={w1}".format(
